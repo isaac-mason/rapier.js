@@ -7,13 +7,42 @@ import {RawAngularInertia} from "./raw";
 export class AngularInertia {
     elements: Float32Array;
 
-    public static fromRaw(raw: RawAngularInertia): AngularInertia {
-        this.elements = raw.elements();
-        raw.free();
-        return this;
+    get m11(): number {
+        return this.elements[0];
+    }
+    
+    get m12(): number {
+        return this.elements[1];
+    }
+    
+    get m13(): number {
+        return this.elements[2];
+    }
+    
+    get m22(): number {
+        return this.elements[3];
+    }
+    
+    get m23(): number {
+        return this.elements[4];
+    }
+    
+    get m33(): number {
+        return this.elements[5];
+    }
+
+    constructor(elements: Float32Array) {
+        this.elements = elements;
     }
 }
-// endif
+
+export class AngularInertiaOps {
+    public static fromRaw(raw: RawAngularInertia): AngularInertia {
+        const angularInertia = new AngularInertia(raw.elements());
+        raw.free();
+        return angularInertia;
+    }
+}
 
 // #if DIM2
 export interface Vector {

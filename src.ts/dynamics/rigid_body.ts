@@ -1,5 +1,8 @@
 import {RawRigidBodySet} from "../raw";
-import {AngularInertia, Rotation, RotationOps, Vector, VectorOps} from "../math";
+import {Rotation, RotationOps, Vector, VectorOps} from "../math";
+// #if DIM3
+import {AngularInertia, AngularInertiaOps} from "../math";
+// #endif
 import {Collider, ColliderHandle, ColliderSet} from "../geometry";
 
 /**
@@ -500,7 +503,7 @@ export class RigidBody {
      * The effective world inverse inertia of this rigid body.
      */
     public effectiveWorldInvInertiaSqrt(): AngularInertia {
-        return AngularInertia.fromRaw(
+        return AngularInertiaOps.fromRaw(
             this.rawSet.rbEffectiveWorldInvInertiaSqrt(this.handle)
         );
     }
