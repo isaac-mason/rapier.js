@@ -1,4 +1,19 @@
 import {RawVector, RawRotation} from "./raw";
+// #if DIM3
+import {RawAngularInertia} from "./raw";
+// endif
+
+// #if DIM3
+export class AngularInertia {
+    elements: Float32Array;
+
+    public static fromRaw(raw: RawAngularInertia): AngularInertia {
+        this.elements = raw.elements();
+        raw.free();
+        return this;
+    }
+}
+// endif
 
 // #if DIM2
 export interface Vector {

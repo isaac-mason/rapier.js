@@ -1,8 +1,10 @@
 use crate::dynamics::{RawRigidBodySet, RawRigidBodyType};
 use crate::geometry::RawColliderSet;
 use crate::math::{RawRotation, RawVector};
+#[cfg(feature = "dim3")]
+use crate::math::{RawAngularInertia};
 use crate::utils::{self, FlatHandle};
-use rapier::dynamics::MassProperties;
+use rapier::dynamics::{MassProperties};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -359,6 +361,18 @@ impl RawRigidBodySet {
     /// The mass of this rigid-body.
     pub fn rbMass(&self, handle: FlatHandle) -> f32 {
         self.map(handle, |rb| rb.mass())
+    }
+
+    /// The effective world inverse inertia of this rigid-body.
+    #[cfg(feature = "dim2")]
+    pub fn rbEffectiveWorldInvInertiaSqrt(&self, handle: FlatHandle) -> f32 {
+        self.map(handle, |rb| rb.mass_properties().world_inv_inertia_sqrt(rb.rotation()).into())
+    }
+    
+    /// The effective world inverse inertia of this rigid-body.
+    #[cfg(feature = "dim3")]
+    pub fn rbEffectiveWorldInvInertiaSqrt(&self, handle: FlatHandle) -> RawAngularInertia {
+        self.map(handle, |rb| rb.mass_properties().world_inv_inertia_sqrt(rb.rotation()).into())
     }
 
     /// Wakes this rigid-body up.

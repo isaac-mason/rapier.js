@@ -2,8 +2,44 @@
 
 #[cfg(feature = "dim3")]
 use na::{Quaternion, Unit};
-use rapier::math::{Rotation, Vector};
+use rapier::math::{AngularInertia, Real, Rotation, Vector};
 use wasm_bindgen::prelude::*;
+#[cfg(feature = "dim3")]
+use js_sys::Float32Array;
+
+#[wasm_bindgen]
+#[repr(transparent)]
+#[derive(Copy, Clone)]
+pub struct RawAngularInertia(pub(crate) AngularInertia<Real>);
+
+impl From<AngularInertia<Real>> for RawAngularInertia {
+    fn from(v: AngularInertia<Real>) -> Self {
+        RawAngularInertia(v)
+    }
+}
+
+#[wasm_bindgen]
+#[cfg(feature = "dim3")]
+impl RawAngularInertia {
+    /// row major list of the angular inertia SpdMatrix3 elements
+    pub fn elements(&self) -> Float32Array {
+        // let m = self.0.into_matrix();
+        // convert the sdp matrix to a regular matrix
+        let m = self.0;
+        let output = Float32Array::new_with_length(6);
+
+        output.copy_from(&[
+            m.m11,
+            m.m12,
+            m.m13,
+            m.m22,
+            m.m23,
+            m.m33,
+        ]);
+
+        output
+    }
+}
 
 #[wasm_bindgen]
 #[repr(transparent)]
